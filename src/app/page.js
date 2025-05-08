@@ -1,14 +1,20 @@
 'use client';
 import { useMachine } from "@xstate/react";
-import { myMashine } from "./machines/myFirsttMachine";
+import { todosMachine } from "./machines/todoAppMachine";
 
 export default function Home() {
-  const [state, send] = useMachine(myMashine)
+  const [state, send] = useMachine(todosMachine, {
+    services: {
+      loadTodos: async () => {
+        // throw new Error('Oh no!')
+        return ['Take bins out', 'Do loundry']
+      }
+    }
+  })
   return (
     <div>
-      {state.value}
-      <button onClick={()=> send({type: 'MOUSEOVER'})}>MOUSEOVER</button>
-      <button onClick={()=> send({type: 'MOUSEOUT'})}>MOUSEOUT</button>
+      <pre>{JSON.stringify(state.value)}</pre>
+      <pre>{JSON.stringify(state.context)}</pre>
     </div>
   );
 }
