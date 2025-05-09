@@ -10,14 +10,29 @@ export default function Home() {
     services: {
       loadTodos: async () => {
         // throw new Error('Oh no!')
-        return Array.from(todos);
+        return new Promise((resolve) =>{
+          setTimeout(() => {
+            resolve(Array.from(todos));
+          }, 1000)
+        })
       },
       saveTodo: async (context) => {
         // throw new Error('FAILED TO SAVE!')
         return new Promise((resolve) =>{
           setTimeout(() => {
-            resolve(todos.add(context.createNewTodoFormInput));
-          }, 2000)
+            todos.add(context.createNewTodoFormInput)
+            resolve();
+          }, 1000)
+        })
+      },
+      deleteTodo: async (context, event) => {
+        console.log(event)
+        // throw new Error('FAILED TO DELETE!')
+        return new Promise((resolve) =>{
+          setTimeout(() => {
+            todos.delete(event.todo);
+            resolve();
+          }, 1000)
         })
       }
     }
