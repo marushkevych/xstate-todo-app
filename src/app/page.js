@@ -1,6 +1,7 @@
 'use client';
 import { useMachine } from "@xstate/react";
 import { todosMachine } from "./machines/todoAppMachine";
+import styles from "./page.module.css";
 
 const todos = new Set(['Take bins out', 'Do loundry']);
 
@@ -31,7 +32,14 @@ export default function Home() {
     return (
       <>
         <ul>
-          {state.context.todos.map(todo => <li>{todo}</li>)}
+          {state.context.todos.map((todo, index) => {
+            return (
+              <li key={index}>
+                {todo}
+                <button className={styles.deleteButton} onClick={()=> send({type: 'delete', todo})}>X</button>
+              </li>
+            )
+          })}
         </ul>
         <button onClick={()=> send({type: 'createNew'})}>Create New</button>
       </>
