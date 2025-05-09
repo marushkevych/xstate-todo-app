@@ -26,6 +26,17 @@ export default function Home() {
     e.preventDefault()
     send({type: 'submit'})
   }
+
+  const renderTodos = () => {
+    return (
+      <>
+        <ul>
+          {state.context.todos.map(todo => <li>{todo}</li>)}
+        </ul>
+        <button onClick={()=> send({type: 'createNew'})}>Create New</button>
+      </>
+    );
+  }
   return (
     <div>
       <pre>{JSON.stringify(state.value)}</pre>
@@ -33,8 +44,7 @@ export default function Home() {
 
       <div>
         {state.matches('Loading Todos') && <span>Loading...</span>}
-        {state.matches('Todos Loaded') 
-          && <button onClick={()=> send({type: 'createNew'})}>Create New</button>}
+        {state.matches('Todos Loaded') && renderTodos()}
         {state.matches('Creating new todo.Showing form input')
           && 
           <form onSubmit={handleSubmit}>
