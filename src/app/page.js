@@ -2,15 +2,30 @@
 import { useMachine } from "@xstate/react";
 import { todosMachine } from "./machines/todoAppMachine";
 
+const todos = new Set(['Take bins out', 'Do loundry']);
+
 export default function Home() {
   const [state, send] = useMachine(todosMachine, {
     services: {
       loadTodos: async () => {
         // throw new Error('Oh no!')
-        return ['Take bins out', 'Do loundry']
+        return Array.from(todos);
+      },
+      saveTodo: async (context) => {
+        // throw new Error('FAILED TO SAVE!')
+        return new Promise((resolve) =>{
+          setTimeout(() => {
+            resolve(todos.add(context.createNewTodoFormInput));
+          }, 2000)
+        })
       }
     }
   })
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    send({type: 'submit'})
+  }
   return (
     <div>
       <pre>{JSON.stringify(state.value)}</pre>
@@ -21,10 +36,17 @@ export default function Home() {
         {state.matches('Todos Loaded') 
           && <button onClick={()=> send({type: 'createNew'})}>Create New</button>}
         {state.matches('Creating new todo.Showing form input')
-          && <input onChange={(e)=> send({
-            type: 'formInputChanged',
-            value: e.target.value
-          })}></input>
+          && 
+          <form onSubmit={handleSubmit}>
+            <input onChange={(e)=> send({
+              type: 'formInputChanged',
+              value: e.target.value
+            })}></input>
+            <button type="submit">Save</button>
+          </form>
+        }
+        {state.matches('Creating new todo.Saving Todo')
+          && <span>Saving...</span>
         }
       </div>
     </div>
