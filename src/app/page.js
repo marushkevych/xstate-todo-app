@@ -81,6 +81,12 @@ export default function Home() {
         {state.matches('Creating new todo.Saving Todo')
           && <span>Saving...</span>
         }
+        {state.matches('Deleting Todo Errored')
+          && <div>
+            Failed to delete todo! The error was {state.context.errorMessage} 
+            <button onClick={()=> send({type: 'dismissError'})}>Dismiss</button>
+          </div>
+        }
       </div>
     </div>
   );
